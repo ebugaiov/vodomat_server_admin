@@ -10,10 +10,7 @@ class UserAdminForm(forms.ModelForm):
 
     class Meta:
         model = User
-        exclude = ('last_visit', 'city')
-        widgets = {
-            'password_hash': forms.HiddenInput()
-        }
+        exclude = ('password_hash', 'last_visit', 'city')
 
     def clean_password(self):
         password = self.cleaned_data['password']
