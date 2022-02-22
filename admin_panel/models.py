@@ -14,7 +14,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=64, blank=True, null=True)
     email = models.CharField(max_length=120, blank=True, null=True)
     password_hash = models.CharField(max_length=128)
-    permission = models.CharField(max_length=64, choices=USER_PERMISSION)
+    permission = models.CharField(max_length=64, choices=USER_PERMISSION, default='operator')
     city = models.CharField(max_length=64, blank=True, null=True)
     last_visit = models.DateTimeField(blank=True, null=True)
 

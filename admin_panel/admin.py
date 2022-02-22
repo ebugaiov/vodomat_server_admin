@@ -63,3 +63,4 @@ class AvtomatAdmin(admin.ModelAdmin):
 
 
 admin.site.site_header = 'Vodomat Server Admin'
+admin.site.site_url = None
