@@ -94,9 +94,10 @@ class Avtomat(models.Model):
     payment_gateway_url = models.CharField(
         max_length=64, blank=True, null=True)
     max_sum = models.IntegerField(blank=True, null=True)
-    size = models.IntegerField(choices=SIZE, blank=True, default=470)
+    size = models.IntegerField(
+        choices=SIZE, blank=True, null=True, default=470)
     competitors = models.IntegerField(
-        choices=COMPETITORS, blank=True, default=0)
+        choices=COMPETITORS, blank=True, null=True, default=0)
     state = models.IntegerField(choices=STATE, blank=True, null=True)
     route = models.ForeignKey(
         'Route', models.DO_NOTHING, blank=True, null=True)

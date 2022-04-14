@@ -60,19 +60,25 @@ class StreetAdmin(SetupDatabase):
 
 @admin.register(Avtomat)
 class AvtomatAdmin(SetupDatabase):
-    list_display = ('avtomat_number', 'address', 'route',
-                    'price_for_app', 'size', 'state')
+    list_display = ('number', 'address', 'route', 'state')
     search_fields = ('street__street', 'avtomat_number')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app')
 
-    @admin.display
+    def number(self, obj):
+        return obj.avtomat_number
+
+    number.short_description = 'Number'
+    number.admin_order_field = 'avtomat_number'
+
     def address(self, obj=None):
         return 'No Address' if obj.street is None else f'{obj.street} {obj.house}'
 
+    address.admin_order_field = 'street'
+
     fieldsets = (
         (None, {
-            'fields': ('size', 'competitors', 'price', 'state')
+            'fields': ('route', 'size', 'competitors', 'price', 'state')
         }),
         ('Address', {
             'fields': ('street', 'house', 'latitude', 'longitude')
