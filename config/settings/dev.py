@@ -2,15 +2,17 @@ from .base import *
 
 DEBUG = True
 
-SECRET_KEY = 'django-insecure-n3!ccn5(gz!9)($x(#h#_kfj#qm%2)))-z+=lrz6)3&ajr*r57'
-
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'database' / 'db.sqlite3',
+    },
+    'vodomat_server': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'vodomat_server',
-        'USER': 'vodomat',
-        'PASSWORD': 'vodomat',
-        'HOST': 'localhost',
+        'NAME': 'test',
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }

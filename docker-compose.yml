@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  nginx:
+    build: ./nginx
+    network_mode: "host"
+    volumes:
+      - static_volume:/app/static
+    depends_on:
+      - app
+    restart: "on-failure"
+
+  app:
+    build: .
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/app/static
+      - ./database:/app/database
+    env_file:
+      - .env
+    image: vodomat_server_admin
+    network_mode: "host"
+    restart: "on-failure"
+
+volumes:
+  static_volume:

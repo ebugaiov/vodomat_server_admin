@@ -3,9 +3,29 @@ from .models import User, Route, City, Street, Avtomat
 from .forms import UserAdminForm
 
 
+class SetupDatabase(admin.ModelAdmin):
+    using = 'vodomat_server'
+
+    def save_model(self, request, obj, form, change):
+        obj.save(using=self.using)
+
+    def delete_model(self, request, obj):
+        obj.delete(using=self.using)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).using(self.using)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        return super().formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
+
+
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'full_name', 'email', 'permission', 'last_visit')
+class UserAdmin(SetupDatabase):
+    list_display = ('username', 'full_name', 'email',
+                    'permission', 'last_visit')
 
     form = UserAdminForm
     fieldsets = (
@@ -23,27 +43,28 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Route)
-class RouteAdmin(admin.ModelAdmin):
+class RouteAdmin(SetupDatabase):
     list_display = ('name', 'car_number', 'driver_1', 'driver_2')
 
 
 @admin.register(City)
-class CityAdmin(admin.ModelAdmin):
+class CityAdmin(SetupDatabase):
     pass
 
 
 @admin.register(Street)
-class StreetAdmin(admin.ModelAdmin):
+class StreetAdmin(SetupDatabase):
     list_display = ('street', 'city')
     search_fields = ('street', )
 
 
 @admin.register(Avtomat)
-class AvtomatAdmin(admin.ModelAdmin):
-    list_display = ('avtomat_number', 'address', 'route', 'price_for_app', 'size', 'competitors')
-    search_fields = ('street__street', 'house')
+class AvtomatAdmin(SetupDatabase):
+    list_display = ('avtomat_number', 'address', 'route',
+                    'price_for_app', 'size', 'state')
+    search_fields = ('street__street', 'avtomat_number')
     autocomplete_fields = ('street', )
-    list_filter = ('size', 'competitors', 'price_for_app', 'route')
+    list_filter = ('state', 'size', 'price_for_app')
 
     @admin.display
     def address(self, obj=None):
@@ -51,7 +72,7 @@ class AvtomatAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('route', 'size', 'competitors', 'price')
+            'fields': ('size', 'competitors', 'price', 'state')
         }),
         ('Address', {
             'fields': ('street', 'house', 'latitude', 'longitude')

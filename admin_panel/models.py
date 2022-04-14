@@ -14,7 +14,8 @@ class User(models.Model):
     first_name = models.CharField(max_length=64, blank=True, null=True)
     email = models.CharField(max_length=120, blank=True, null=True)
     password_hash = models.CharField(max_length=128)
-    permission = models.CharField(max_length=64, choices=USER_PERMISSION, default='operator')
+    permission = models.CharField(
+        max_length=64, choices=USER_PERMISSION, default='operator')
     city = models.CharField(max_length=64, blank=True, null=True)
     last_visit = models.DateTimeField(blank=True, null=True)
 
@@ -76,6 +77,12 @@ class Avtomat(models.Model):
         (0, 'No'),
         (1, 'Yes')
     )
+    STATE = (
+        (0, 'Undefined'),
+        (1, 'Normal'),
+        (2, 'No Volt'),
+        (3, 'Crashed')
+    )
     avtomat_number = models.AutoField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
@@ -84,12 +91,17 @@ class Avtomat(models.Model):
     price = models.IntegerField(blank=True, null=True)
     price_for_app = models.IntegerField(blank=True, null=True)
     payment_app_url = models.CharField(max_length=64, blank=True, null=True)
-    payment_gateway_url = models.CharField(max_length=64, blank=True, null=True)
+    payment_gateway_url = models.CharField(
+        max_length=64, blank=True, null=True)
     max_sum = models.IntegerField(blank=True, null=True)
     size = models.IntegerField(choices=SIZE, blank=True, default=470)
-    competitors = models.IntegerField(choices=COMPETITORS, blank=True, default=0)
-    route = models.ForeignKey('Route', models.DO_NOTHING, blank=True, null=True)
-    street = models.ForeignKey('Street', models.DO_NOTHING, blank=True, null=True)
+    competitors = models.IntegerField(
+        choices=COMPETITORS, blank=True, default=0)
+    state = models.IntegerField(choices=STATE, blank=True, null=True)
+    route = models.ForeignKey(
+        'Route', models.DO_NOTHING, blank=True, null=True)
+    street = models.ForeignKey(
+        'Street', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
