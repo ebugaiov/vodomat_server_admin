@@ -1,6 +1,15 @@
 import bcrypt
 from django import forms
-from .models import User
+from .models import Avtomat, User
+
+
+class AvtomatAdminForm(forms.ModelForm):
+
+    def clean_rro_id(self):
+        data = self.cleaned_data.get('rro_id')
+        if data and not data.isdigit():
+            raise forms.ValidationError('Invalid Character')
+        return data
 
 
 class UserAdminForm(forms.ModelForm):

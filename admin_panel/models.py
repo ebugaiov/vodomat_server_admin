@@ -49,6 +49,7 @@ class City(models.Model):
     class Meta:
         managed = False
         db_table = 'city'
+        ordering = ['city']
         verbose_name_plural = 'cities'
 
     def __str__(self):
@@ -103,6 +104,7 @@ class Avtomat(models.Model):
         'Route', models.DO_NOTHING, blank=True, null=True)
     street = models.ForeignKey(
         'Street', models.DO_NOTHING, blank=True, null=True)
+    rro_id = models.CharField(max_length=9, blank=True, null=True, verbose_name='RRO id')
 
     class Meta:
         managed = False

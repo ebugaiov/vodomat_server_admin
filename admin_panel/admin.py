@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import User, Route, City, Street, Avtomat
-from .forms import UserAdminForm
+from .forms import AvtomatAdminForm, UserAdminForm
 
 
 class SetupDatabase(admin.ModelAdmin):
@@ -60,8 +60,9 @@ class StreetAdmin(SetupDatabase):
 
 @admin.register(Avtomat)
 class AvtomatAdmin(SetupDatabase):
+    form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state')
-    search_fields = ('street__street', 'avtomat_number')
+    search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app')
 
@@ -77,8 +78,8 @@ class AvtomatAdmin(SetupDatabase):
     address.admin_order_field = 'street'
 
     fieldsets = (
-        (None, {
-            'fields': ('route', 'size', 'competitors', 'price', 'state')
+        ('Properties', {
+            'fields': ('route', 'size', 'competitors', 'price', 'state', 'rro_id')
         }),
         ('Address', {
             'fields': ('street', 'house', 'latitude', 'longitude')
