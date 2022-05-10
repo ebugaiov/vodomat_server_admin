@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.html import format_html
 
 
 class User(models.Model):
@@ -40,7 +41,7 @@ class Route(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.car_number
+        return f'{self.car_number} ({self.name})'
 
 
 class City(models.Model):

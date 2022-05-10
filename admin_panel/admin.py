@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import User, Route, City, Street, Avtomat
 from .forms import AvtomatAdminForm, UserAdminForm
 
@@ -61,21 +62,24 @@ class StreetAdmin(SetupDatabase):
 @admin.register(Avtomat)
 class AvtomatAdmin(SetupDatabase):
     form = AvtomatAdminForm
-    list_display = ('number', 'address', 'route', 'state')
+    list_display = ('number', 'address', 'route', 'state', 'show_on_map')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app')
 
+    @admin.display(description='Number', ordering='avtomat_number')
     def number(self, obj):
         return obj.avtomat_number
 
-    number.short_description = 'Number'
-    number.admin_order_field = 'avtomat_number'
-
+    @admin.display(ordering='street')
     def address(self, obj=None):
         return 'No Address' if obj.street is None else f'{obj.street} {obj.house}'
 
-    address.admin_order_field = 'street'
+    @admin.display(description='')
+    def show_on_map(self, obj=None):
+        href = f'https://www.google.com/maps/search/?api=1&query={obj.latitude},{obj.longitude}'
+        return '' if obj.latitude is None else format_html(f"<a target='_blank' rel='noopener noreferrer'"
+                                                           f"href={href}>Show on map</a>")
 
     fieldsets = (
         ('Properties', {
