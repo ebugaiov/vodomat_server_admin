@@ -89,7 +89,7 @@ class AvtomatAdmin(SetupDatabase):
             'fields': ('street', 'house', 'latitude', 'longitude')
         }),
         ('Application', {
-            'fields': ('price_for_app', 'search_radius', 'payment_app_url', 'payment_gateway_url')
+            'fields': ('price_for_app', 'search_radius', 'payment_app_url', 'payment_gateway_name')
         })
     )
 

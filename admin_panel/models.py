@@ -85,6 +85,10 @@ class Avtomat(models.Model):
         (2, 'No Volt'),
         (3, 'Crashed')
     )
+    PAYMENT_GATEWAY_NAME = (
+        ('portmone', 'Portmone'),
+        ('monobank', 'Monobank')
+    )
     avtomat_number = models.AutoField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
@@ -93,6 +97,7 @@ class Avtomat(models.Model):
     price = models.IntegerField(blank=True, null=True)
     price_for_app = models.IntegerField(blank=True, null=True)
     payment_app_url = models.CharField(max_length=64, blank=True, null=True)
+    payment_gateway_name = models.CharField(max_length=64, blank=True, null=True, choices=PAYMENT_GATEWAY_NAME)
     payment_gateway_url = models.CharField(
         max_length=64, blank=True, null=True)
     max_sum = models.IntegerField(blank=True, null=True)
