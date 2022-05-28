@@ -83,7 +83,7 @@ class AvtomatAdmin(SetupDatabase):
 
     fieldsets = (
         ('Properties', {
-            'fields': ('route', 'size', 'competitors', 'price', 'state', 'rro_id')
+            'fields': ('route', 'size', 'competitors', 'price', 'state', 'rro_id', 'security_id')
         }),
         ('Address', {
             'fields': ('street', 'house', 'latitude', 'longitude')

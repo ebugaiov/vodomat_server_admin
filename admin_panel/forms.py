@@ -11,6 +11,12 @@ class AvtomatAdminForm(forms.ModelForm):
             raise forms.ValidationError('Invalid Character')
         return data
 
+    def clean_security_id(self):
+        data = self.cleaned_data.get('security_id')
+        if data and not data.isdigit():
+            raise forms.ValidationError('Invalid Character')
+        return data
+
 
 class UserAdminForm(forms.ModelForm):
 

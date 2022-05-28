@@ -111,6 +111,7 @@ class Avtomat(models.Model):
     street = models.ForeignKey(
         'Street', models.DO_NOTHING, blank=True, null=True)
     rro_id = models.CharField(max_length=9, blank=True, null=True, verbose_name='RRO id')
+    security_id = models.CharField(max_length=9, blank=True, null=True, verbose_name='Security Num')
 
     class Meta:
         managed = False
