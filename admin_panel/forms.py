@@ -17,6 +17,15 @@ class AvtomatAdminForm(forms.ModelForm):
             raise forms.ValidationError('Invalid Character')
         return data
 
+    def clean(self):
+        cleaned_data = super().clean()
+        house_db = self.instance.house
+        house_form = cleaned_data.get('house')
+        if house_db and house_db != house_form:
+            cleaned_data['longitude'] = None
+            cleaned_data['latitude'] = None
+        return cleaned_data
+
 
 class UserAdminForm(forms.ModelForm):
 
