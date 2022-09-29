@@ -112,6 +112,7 @@ class Avtomat(models.Model):
         'Street', models.DO_NOTHING, blank=True, null=True)
     rro_id = models.CharField(max_length=9, blank=True, null=True, verbose_name='RRO ID')
     security_id = models.CharField(max_length=9, blank=True, null=True, verbose_name='Security ID')
+    security_state = models.BooleanField(verbose_name='Security ON')
 
     class Meta:
         managed = False
