@@ -92,7 +92,8 @@ class Avtomat(models.Model):
     SECURITY_STATE = (
         (None, 'No Security'),
         (1, 'Security ON'),
-        (2, 'Security OFF')
+        (2, 'Security OFF'),
+        (3, 'Undefined'),
     )
     avtomat_number = models.AutoField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
