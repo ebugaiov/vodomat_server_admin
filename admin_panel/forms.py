@@ -16,7 +16,7 @@ class AvtomatAdminForm(forms.ModelForm):
         security_state = self.cleaned_data.get('security_state')
         if security_id and not security_state:
             raise forms.ValidationError('Check Security State! SecurityID is not empty!')
-        if not security_id and security_state:
+        if not security_id and security_state in (1, 2):
             raise forms.ValidationError('Check Security State! SecurityID is empty!')
         return security_state
 
