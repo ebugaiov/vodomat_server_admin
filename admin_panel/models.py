@@ -74,6 +74,7 @@ class Avtomat(models.Model):
     SIZE = (
         (470, 'Single'),
         (940, 'Double'),
+        (471, 'Double/1')
     )
     COMPETITORS = (
         (0, 'No'),
