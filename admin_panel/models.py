@@ -91,10 +91,10 @@ class Avtomat(models.Model):
         ('monobank', 'Monobank')
     )
     SECURITY_STATE = (
-        (None, 'No Security'),
+        (None, 'Undefined'),
         (1, 'Security ON'),
         (2, 'Security OFF'),
-        (3, 'Undefined'),
+        (3, 'No security'),
     )
     avtomat_number = models.AutoField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
