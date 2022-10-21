@@ -62,7 +62,7 @@ class StreetAdmin(SetupDatabase):
 @admin.register(Avtomat)
 class AvtomatAdmin(SetupDatabase):
     form = AvtomatAdminForm
-    list_display = ('number', 'address', 'route', 'state', 'show_on_map')
+    list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app')
@@ -79,7 +79,15 @@ class AvtomatAdmin(SetupDatabase):
     def show_on_map(self, obj=None):
         href = f'https://www.google.com/maps/search/?api=1&query={obj.latitude},{obj.longitude}'
         return '' if obj.latitude is None else format_html(f"<a target='_blank' rel='noopener noreferrer'"
-                                                           f"href={href}>Show on map</a>")
+                                                           f"href={href}><i class='fas fa-map-marked-alt'></i></a>")
+
+    @admin.display(description='')
+    def create_qr(self, obj=None):
+        href = f'http://chart.apis.google.com/chart?' \
+               f'cht=qr&chs=300x300&' \
+               f'chl=https://app.roganska.com?vodomat_id={obj.avtomat_number}'
+        return format_html(f"<a target='_blank' rel='noopener noreferrer'"
+                           f"href={href}><i class='fas fa-qrcode'></i></a>")
 
     fieldsets = (
         ('Properties', {
