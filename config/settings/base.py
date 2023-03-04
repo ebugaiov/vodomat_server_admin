@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'admin_panel'
+    'server_panel'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +76,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+DATABASE_ROUTERS = ['server_panel.dbrouters.ServerRouter']
 
 DATABASES = {
     'default': {

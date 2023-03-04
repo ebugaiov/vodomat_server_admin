@@ -4,27 +4,8 @@ from .models import User, Route, City, Street, Avtomat
 from .forms import AvtomatAdminForm, UserAdminForm
 
 
-class SetupDatabase(admin.ModelAdmin):
-    using = 'vodomat_server'
-
-    def save_model(self, request, obj, form, change):
-        obj.save(using=self.using)
-
-    def delete_model(self, request, obj):
-        obj.delete(using=self.using)
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).using(self.using)
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        return super().formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
-
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
-
-
 @admin.register(User)
-class UserAdmin(SetupDatabase):
+class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'full_name', 'email',
                     'permission', 'last_visit')
 
@@ -44,23 +25,23 @@ class UserAdmin(SetupDatabase):
 
 
 @admin.register(Route)
-class RouteAdmin(SetupDatabase):
+class RouteAdmin(admin.ModelAdmin):
     list_display = ('name', 'car_number', 'driver_1', 'driver_2')
 
 
 @admin.register(City)
-class CityAdmin(SetupDatabase):
+class CityAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(Street)
-class StreetAdmin(SetupDatabase):
+class StreetAdmin(admin.ModelAdmin):
     list_display = ('street', 'city')
     search_fields = ('street', )
 
 
 @admin.register(Avtomat)
-class AvtomatAdmin(SetupDatabase):
+class AvtomatAdmin(admin.ModelAdmin):
     form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
@@ -90,8 +71,12 @@ class AvtomatAdmin(SetupDatabase):
                            f"href={href}><i class='fas fa-qrcode'></i></a>")
 
     fieldsets = (
+        ('Set Avtomat Number', {
+           'fields': ('avtomat_number', )
+        }),
         ('Properties', {
-            'fields': ('route', 'size', 'competitors', 'price', 'state', 'rro_id', ('security_id', 'security_state'))
+            'fields': ('route', 'size', 'competitors', 'price', 'state', 'rro_id',
+                       ('security_id', 'security_state'))
         }),
         ('Address', {
             'fields': ('street', 'house', 'latitude', 'longitude')
@@ -101,6 +86,13 @@ class AvtomatAdmin(SetupDatabase):
         })
     )
 
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = super().get_fieldsets(request, obj)
+        if obj:
+            return fieldsets[1:]
+        return fieldsets
 
-admin.site.site_header = 'Vodomat Server Admin'
+
+admin.site.site_header = 'Vodomat Admin'
+admin.site.site_title = 'Vodomat Admin'
 admin.site.site_url = None

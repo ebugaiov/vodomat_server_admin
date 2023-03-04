@@ -1,6 +1,6 @@
 import bcrypt
 from django import forms
-from .models import Avtomat, User
+from .models import User
 
 
 class AvtomatAdminForm(forms.ModelForm):
@@ -19,13 +19,6 @@ class AvtomatAdminForm(forms.ModelForm):
         if not security_id and security_state in (1, 2):
             raise forms.ValidationError('Check Security State! SecurityID is empty!')
         return security_state
-
-# Checking input for security id. DISABLED "_"
-    def _clean_security_id(self):
-        data = self.cleaned_data.get('security_id')
-        if data and not data.isdigit():
-            raise forms.ValidationError('Invalid Character')
-        return data
 
     def clean(self):
         cleaned_data = super().clean()

@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.html import format_html
 
 
 class User(models.Model):
@@ -67,7 +66,7 @@ class Street(models.Model):
         ordering = ['street']
 
     def __str__(self):
-        return self.street
+        return f'{self.street}' + (f' ({self.city})' if self.city.city != 'Харків м.' else '')
 
 
 class Avtomat(models.Model):
@@ -96,11 +95,11 @@ class Avtomat(models.Model):
         (2, 'Security OFF'),
         (3, 'No security'),
     )
-    avtomat_number = models.AutoField(primary_key=True)
+    avtomat_number = models.IntegerField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-    search_radius = models.IntegerField(blank=True, null=True)
+    search_radius = models.IntegerField(blank=True, null=True, default=300)
     price = models.IntegerField(blank=True, null=True)
     price_for_app = models.IntegerField(blank=True, null=True)
     payment_app_url = models.CharField(max_length=64, blank=True, null=True)
@@ -112,7 +111,7 @@ class Avtomat(models.Model):
         choices=SIZE, blank=True, null=True, default=470)
     competitors = models.IntegerField(
         choices=COMPETITORS, blank=True, null=True, default=0)
-    state = models.IntegerField(choices=STATE, blank=True, null=True)
+    state = models.IntegerField(choices=STATE, blank=True, null=True, default=0)
     route = models.ForeignKey(
         'Route', models.DO_NOTHING, blank=True, null=True)
     street = models.ForeignKey(
