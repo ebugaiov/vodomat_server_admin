@@ -47,6 +47,7 @@ class AvtomatAdmin(admin.ModelAdmin):
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app')
+    save_as = True  # Create new Avtomat from existing
 
     @admin.display(description='Number', ordering='avtomat_number')
     def number(self, obj):

@@ -29,8 +29,8 @@ class User(models.Model):
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=16)
-    car_number = models.CharField(max_length=16, blank=True, null=True)
+    name = models.CharField(max_length=16, unique=True)
+    car_number = models.CharField(max_length=16, blank=True, null=True, unique=True)
     driver_1 = models.CharField(max_length=32, blank=True, null=True)
     driver_2 = models.CharField(max_length=32, blank=True, null=True)
 
@@ -44,7 +44,7 @@ class Route(models.Model):
 
 
 class City(models.Model):
-    city = models.CharField(max_length=32)
+    city = models.CharField(max_length=32, unique=True)
 
     class Meta:
         managed = False
