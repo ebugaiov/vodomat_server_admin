@@ -44,7 +44,12 @@ class Route(models.Model):
 
 
 class City(models.Model):
+    PRICE_TYPE = (
+        (0, 'Main'),
+        (1, 'Other')
+    )
     city = models.CharField(max_length=32, unique=True)
+    price_type = models.IntegerField(choices=PRICE_TYPE, blank=True, null=True, default=0)
 
     class Meta:
         managed = False

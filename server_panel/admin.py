@@ -4,8 +4,16 @@ from .models import User, Route, City, Street, Avtomat
 from .forms import AvtomatAdminForm, UserAdminForm
 
 
+class BaseAdmin(admin.ModelAdmin):
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+
+
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseAdmin):
     list_display = ('username', 'full_name', 'email',
                     'permission', 'last_visit')
 
@@ -25,29 +33,33 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Route)
-class RouteAdmin(admin.ModelAdmin):
+class RouteAdmin(BaseAdmin):
     list_display = ('name', 'car_number', 'driver_1', 'driver_2')
 
 
 @admin.register(City)
-class CityAdmin(admin.ModelAdmin):
+class CityAdmin(BaseAdmin):
     pass
 
 
 @admin.register(Street)
-class StreetAdmin(admin.ModelAdmin):
+class StreetAdmin(BaseAdmin):
     list_display = ('street', 'city')
     search_fields = ('street', )
 
 
 @admin.register(Avtomat)
-class AvtomatAdmin(admin.ModelAdmin):
+class AvtomatAdmin(BaseAdmin):
     form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
-    list_filter = ('state', 'size', 'price_for_app')
+    list_filter = ('state', 'size', 'price_for_app', 'street__city')
     save_as = True  # Create new Avtomat from existing
+
+    @admin.display(description='')
+    def price_type(self, obj=None):
+        return obj.street__city
 
     @admin.display(description='Number', ordering='avtomat_number')
     def number(self, obj):
