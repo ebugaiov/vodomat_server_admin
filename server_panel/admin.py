@@ -4,16 +4,8 @@ from .models import User, Route, City, Street, Avtomat
 from .forms import AvtomatAdminForm, UserAdminForm
 
 
-class BaseAdmin(admin.ModelAdmin):
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
-
-
 @admin.register(User)
-class UserAdmin(BaseAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = ('username', 'full_name', 'email',
                     'permission', 'last_visit')
 
@@ -33,29 +25,30 @@ class UserAdmin(BaseAdmin):
 
 
 @admin.register(Route)
-class RouteAdmin(BaseAdmin):
+class RouteAdmin(admin.ModelAdmin):
     list_display = ('name', 'car_number', 'driver_1', 'driver_2')
 
 
 @admin.register(City)
-class CityAdmin(BaseAdmin):
+class CityAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(Street)
-class StreetAdmin(BaseAdmin):
+class StreetAdmin(admin.ModelAdmin):
     list_display = ('street', 'city')
     search_fields = ('street', )
 
 
 @admin.register(Avtomat)
-class AvtomatAdmin(BaseAdmin):
+class AvtomatAdmin(admin.ModelAdmin):
     form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app', 'street__city')
     save_as = True  # Create new Avtomat from existing
+    # list_per_page = 1000
 
     @admin.display(description='')
     def price_type(self, obj=None):
@@ -109,3 +102,4 @@ class AvtomatAdmin(BaseAdmin):
 admin.site.site_header = 'Vodomat Admin'
 admin.site.site_title = 'Vodomat Admin'
 admin.site.site_url = None
+admin.site.disable_action('delete_selected')
