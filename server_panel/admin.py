@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import User, Route, City, Street, Avtomat
+from .models import User, Route, City, Street, Avtomat, Setting
 from .forms import AvtomatAdminForm, UserAdminForm
+from .avtomat_actions import set_max_sum
 
 
 @admin.register(User)
@@ -42,13 +43,14 @@ class StreetAdmin(admin.ModelAdmin):
 
 @admin.register(Avtomat)
 class AvtomatAdmin(admin.ModelAdmin):
+    actions = [set_max_sum]
     form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app', 'street__city')
     save_as = True  # Create new Avtomat from existing
-    # list_per_page = 1000
+    list_per_page = 300
 
     @admin.display(description='')
     def price_type(self, obj=None):
@@ -97,6 +99,11 @@ class AvtomatAdmin(admin.ModelAdmin):
         if obj:
             return fieldsets[1:]
         return fieldsets
+
+
+@admin.register(Setting)
+class SettingAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.site_header = 'Vodomat Admin'

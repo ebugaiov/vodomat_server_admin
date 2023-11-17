@@ -133,3 +133,15 @@ class Avtomat(models.Model):
 
     def __str__(self):
         return f'New {self.avtomat_number}' if self.house is None else f'Avtomat {self.avtomat_number}'
+
+
+class Setting(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    value = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'setting'
+
+    def __str__(self):
+        return f'{self.name} = {self.value}'
