@@ -21,7 +21,7 @@ def set_max_sum(modeladmin, request, queryset):
     avtomat_numbers = [item.avtomat_number for item in queryset]
     busy_avtomats = []
     command = '055be4'
-    max_sum_hex_value = f"{Setting.objects.get(name='avtomat_max_sum').value:x}"
+    max_sum_hex_value = f"{Setting.objects.get(name='avtomat_max_sum').value:04x}"
     parameter = f'{command}00{max_sum_hex_value[2:]}{max_sum_hex_value[:2]}'
     with redis.Redis(host=settings.REDIS_HOST, charset='utf-8', decode_responses=True) as redis_con:
         for number in avtomat_numbers:
