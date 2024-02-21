@@ -50,7 +50,7 @@ class AvtomatAdmin(admin.ModelAdmin):
     autocomplete_fields = ('street', )
     list_filter = ('state', 'size', 'price_for_app', 'street__city')
     save_as = True  # Create new Avtomat from existing
-    list_per_page = 300
+    list_per_page = 200
 
     @admin.display(description='')
     def price_type(self, obj=None):
