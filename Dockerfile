@@ -1,4 +1,4 @@
-FROM python:3.9.6-alpine
+FROM python:3.11.6-alpine
 
 WORKDIR /opt/server_admin
 

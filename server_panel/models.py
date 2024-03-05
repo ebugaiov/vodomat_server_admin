@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 
 
 class User(models.Model):
@@ -133,6 +134,14 @@ class Avtomat(models.Model):
 
     def __str__(self):
         return f'New {self.avtomat_number}' if self.house is None else f'Avtomat {self.avtomat_number}'
+
+
+class Statistic(models.Model):
+    avtomat = models.ForeignKey(Avtomat, to_field='avtomat_number', db_column='avtomat_number', on_delete=models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'statistic'
 
 
 class Setting(models.Model):
