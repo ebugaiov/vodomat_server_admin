@@ -23,8 +23,8 @@ class UserAdmin(admin.ModelAdmin):
         })
     )
 
-    @admin.display
-    def full_name(self, obj=None):
+    @admin.display()
+    def full_name(self, obj):
         return f'{obj.last_name} {obj.first_name}' if obj.last_name else ''
 
 
@@ -43,6 +43,8 @@ class StreetAdmin(admin.ModelAdmin):
     list_display = ('street', 'city')
     search_fields = ('street', )
 
+    list_select_related = ['city', ]
+
 
 @admin.register(Avtomat)
 class AvtomatAdmin(admin.ModelAdmin):
@@ -55,12 +57,14 @@ class AvtomatAdmin(admin.ModelAdmin):
     save_as = True  # Create new Avtomat from existing
     list_per_page = 100
 
+    list_select_related = ['street', 'street__city', 'route']
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.annotate(statistic_count=Count('statistic'))
 
     @admin.display(description='')
-    def price_type(self, obj=None):
+    def price_type(self, obj):
         return obj.street__city
 
     @admin.display(description='Number', ordering='avtomat_number')
@@ -68,17 +72,17 @@ class AvtomatAdmin(admin.ModelAdmin):
         return obj.avtomat_number
 
     @admin.display(ordering='street')
-    def address(self, obj=None):
+    def address(self, obj):
         return 'No Address' if obj.street is None else f'{obj.street} {obj.house}'
 
     @admin.display(description='')
-    def show_on_map(self, obj=None):
+    def show_on_map(self, obj):
         href = f'https://www.google.com/maps/search/?api=1&query={obj.latitude},{obj.longitude}'
         return '' if obj.latitude is None else format_html(f"<a target='_blank' rel='noopener noreferrer'"
                                                            f"href={href}><i class='fas fa-map-marked-alt'></i></a>")
 
     @admin.display(description='')
-    def create_qr(self, obj=None):
+    def create_qr(self, obj):
         href = f'http://chart.apis.google.com/chart?' \
                f'cht=qr&chs=300x300&' \
                f'chl=https://app.roganska.com?vodomat_id={obj.avtomat_number}'
@@ -115,5 +119,5 @@ class SettingAdmin(admin.ModelAdmin):
 
 admin.site.site_header = 'Vodomat Admin'
 admin.site.site_title = 'Vodomat Admin'
-admin.site.site_url = None
+admin.site.site_url = ''
 admin.site.disable_action('delete_selected')

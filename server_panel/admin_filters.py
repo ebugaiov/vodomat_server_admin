@@ -3,8 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class InactiveAvtomatsListFilter(admin.SimpleListFilter):
-    title = _('inactive avtomats')
-    parameter_name = 'inactive_avtomats'
+    title = _('activity status')
+    parameter_name = 'activity_status'
 
     def lookups(self, request, model_admin):
         return [
