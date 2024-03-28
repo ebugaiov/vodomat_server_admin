@@ -9,10 +9,11 @@ RUN apk update \
     && apk add --virtual build-deps gcc python3-dev musl-dev libffi-dev \
     && apk add --no-cache mariadb-dev
 
-COPY ./requirements.txt .
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+COPY ./requirements ./requirements
+RUN pip install --upgrade pip\
+    && pip install --no-cache-dir -r requirements/production.txt
 
-COPY . .
+COPY ./src .
+COPY ./database .
 
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
