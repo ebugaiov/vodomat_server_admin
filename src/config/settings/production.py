@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = ['https://admin.roganska.com']
 
 DATABASES = {
     'default': {
