@@ -30,7 +30,7 @@ class User(models.Model):
 
 
 class Route(models.Model):
-    name = models.CharField(max_length=16, unique=True)
+    name = models.CharField(max_length=16, unique=True, verbose_name="Route Number")
     car_number = models.CharField(max_length=16, blank=True, null=True, unique=True)
     driver_1 = models.CharField(max_length=32, blank=True, null=True)
     driver_2 = models.CharField(max_length=32, blank=True, null=True)
