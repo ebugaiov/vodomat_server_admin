@@ -45,3 +45,13 @@ def set_price(modeladmin, request, queryset):
         messages.info(request, f"Avtomat's Price changed to {price / 100:.2f}")
     except Setting.DoesNotExist:
         messages.warning(request, 'You have to set "avtomat_price" in setting table')
+
+
+@admin.action(description='Set Avtomat Price for App')
+def set_price_for_app(modeladmin, request, queryset):
+    try:
+        price_for_app = Setting.objects.get(name='avtomat_price_for_app').value
+        queryset.update(price_for_app=int(price_for_app))
+        messages.info(request, f"Avtomat's Price for App changed to {price_for_app / 100:.2f}")
+    except Setting.DoesNotExist:
+        messages.warning(request, 'You have to set "avtomat_price_for_app" in setting table')
