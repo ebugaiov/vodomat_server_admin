@@ -35,3 +35,13 @@ def set_max_sum(modeladmin, request, queryset):
             messages.warning(request, f'Avtomat {busy_avtomats[0]} is busy!')
         else:
             messages.warning(request, f"Avtomats {', '.join(str(item) for item in busy_avtomats)} are busy!")
+
+
+@admin.action(description='Set Avtomat Price')
+def set_price(modeladmin, request, queryset):
+    try:
+        price = Setting.objects.get(name='avtomat_price').value
+        queryset.update(price=int(price))
+        messages.info(request, f"Avtomat's Price changed to {price / 100:.2f}")
+    except Setting.DoesNotExist:
+        messages.warning(request, 'You have to set "avtomat_price" in setting table')
