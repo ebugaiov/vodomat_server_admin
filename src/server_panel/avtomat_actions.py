@@ -53,5 +53,11 @@ def set_price_for_app(modeladmin, request, queryset):
         price_for_app = Setting.objects.get(name='avtomat_price_for_app').value
         queryset.update(price_for_app=int(price_for_app))
         messages.info(request, f"Avtomat's Price for App changed to {price_for_app / 100:.2f}")
-    except Setting.DoesNotExist:
+    except:
         messages.warning(request, 'You have to set "avtomat_price_for_app" in setting table')
+
+
+@admin.action(description='Disable Avtomat Online Pay')
+def disable_online_pay(modeladmin, request, queryset):
+    queryset.update(price_for_app=None)
+    messages.info(request, "Online Payments have been disabled for the selected machines")

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import User, Route, City, Street, Avtomat, Setting
 from .forms import AvtomatAdminForm, UserAdminForm
-from .avtomat_actions import set_max_sum, set_price, set_price_for_app
+from .avtomat_actions import set_max_sum, set_price, set_price_for_app, disable_online_pay
 
 from django.db.models import Count
 from .admin_filters import InactiveAvtomatsListFilter
@@ -48,7 +48,7 @@ class StreetAdmin(admin.ModelAdmin):
 
 @admin.register(Avtomat)
 class AvtomatAdmin(admin.ModelAdmin):
-    actions = [set_price, set_price_for_app, set_max_sum, admin.actions.delete_selected]
+    actions = [set_price, set_price_for_app, set_max_sum, disable_online_pay, admin.actions.delete_selected]
     form = AvtomatAdminForm
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')

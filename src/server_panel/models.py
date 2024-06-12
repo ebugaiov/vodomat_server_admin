@@ -146,7 +146,7 @@ class Statistic(models.Model):
 
 class Setting(models.Model):
     name = models.CharField(max_length=64, unique=True)
-    value = models.IntegerField()
+    value = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
