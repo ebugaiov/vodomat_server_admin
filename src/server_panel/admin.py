@@ -4,8 +4,7 @@ from .models import User, Route, City, Street, Avtomat, Setting
 from .forms import AvtomatAdminForm, UserAdminForm
 from .avtomat_actions import set_max_sum, set_price, set_price_for_app, disable_online_pay
 
-from django.db.models import Count
-from .admin_filters import InactiveAvtomatsListFilter
+from .admin_filters import RoutesListFilter
 
 
 @admin.register(User)
@@ -53,15 +52,11 @@ class AvtomatAdmin(admin.ModelAdmin):
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
-    list_filter = ('state', 'size', 'price_for_app', 'route__name', 'street__city')
+    list_filter = ('state', 'size', 'price_for_app', RoutesListFilter, 'street__city')
     save_as = True  # Create new Avtomat from existing
     list_per_page = 100
 
     list_select_related = ['street', 'street__city', 'route']
-
-    # def get_queryset(self, request):
-    #     qs = super().get_queryset(request)
-    #     return qs.annotate(statistic_count=Count('statistic'))
 
     @admin.display(description='')
     def price_type(self, obj):
