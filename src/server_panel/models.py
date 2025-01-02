@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.functional import cached_property
 
 
 class User(models.Model):
