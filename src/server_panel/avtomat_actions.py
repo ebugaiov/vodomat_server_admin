@@ -3,6 +3,9 @@ import requests
 from typing import Optional
 from django.contrib import admin, messages
 from django.core.cache import cache
+from django.contrib.admin.models import LogEntry, CHANGE
+from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import force_str
 from .models import Setting
 
 
@@ -25,15 +28,23 @@ def set_param_for_avtomat(avtomat_number: int, param: str) -> Optional[int]:
 
 @admin.action(description='Set Avtomat Max Sum')
 def set_max_sum(modeladmin, request, queryset):
-    avtomat_numbers = [item.avtomat_number for item in queryset]
     busy_avtomats = []
     command = '055be4'
     max_sum_hex_value = f"{Setting.objects.get(name='avtomat_max_sum').value:04x}"
     parameter = f'{command}00{max_sum_hex_value[2:]}{max_sum_hex_value[:2]}'
-    for number in avtomat_numbers:
-        busy_avtomat_number = set_param_for_avtomat(number, parameter)
+    for item in queryset:
+        busy_avtomat_number = set_param_for_avtomat(item.avtomat_number, parameter)
         if busy_avtomat_number:
             busy_avtomats.append(busy_avtomat_number)
+        else:
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(item).pk,
+                object_id=item.pk,
+                object_repr=force_str(item),
+                action_flag=CHANGE,
+                change_message=f'Changed Max Sum to {max_sum_hex_value}'
+            )
     if not busy_avtomats:
         messages.info(request, 'The maximum sum for avtomats was set')
     else:
@@ -47,7 +58,18 @@ def set_max_sum(modeladmin, request, queryset):
 def set_price(modeladmin, request, queryset):
     try:
         price = Setting.objects.get(name='avtomat_price').value
-        queryset.update(price=int(price))
+        # queryset.update(price=int(price))
+        for item in queryset:
+            item.price = int(price)
+            item.save()
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(item).pk,
+                object_id=item.pk,
+                object_repr=force_str(item),
+                action_flag=CHANGE,
+                change_message=f'Changed Price to {price / 100:.2f}'
+            )
         messages.info(request, f"Avtomat's Price changed to {price / 100:.2f}")
     except Setting.DoesNotExist:
         messages.warning(request, 'You have to set "avtomat_price" in setting table')
@@ -57,13 +79,33 @@ def set_price(modeladmin, request, queryset):
 def set_price_for_app(modeladmin, request, queryset):
     try:
         price_for_app = Setting.objects.get(name='avtomat_price_for_app').value
-        queryset.update(price_for_app=int(price_for_app))
+        for item in queryset:
+            item.price_for_app = int(price_for_app)
+            item.save()
+            LogEntry.objects.log_action(
+                user_id=request.user.id,
+                content_type_id=ContentType.objects.get_for_model(item).pk,
+                object_id=item.pk,
+                object_repr=force_str(item),
+                action_flag=CHANGE,
+                change_message=f'Changed Price for App to {price_for_app / 100:.2f}'
+            )
         messages.info(request, f"Avtomat's Price for App changed to {price_for_app / 100:.2f}")
-    except:
+    except Setting.DoesNotExist:
         messages.warning(request, 'You have to set "avtomat_price_for_app" in setting table')
 
 
 @admin.action(description='Disable Avtomat Online Pay')
 def disable_online_pay(modeladmin, request, queryset):
-    queryset.update(price_for_app=None)
+    for item in queryset:
+        item.price_for_app = None
+        item.save()
+        LogEntry.objects.log_action(
+            user_id=request.user.id,
+            content_type_id=ContentType.objects.get_for_model(item).pk,
+            object_id=item.pk,
+            object_repr=force_str(item),
+            action_flag=CHANGE,
+            change_message='Changed Price for App (set None)',
+        )
     messages.info(request, "Online Payments have been disabled for the selected machines")
