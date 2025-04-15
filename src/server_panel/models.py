@@ -100,6 +100,7 @@ class Avtomat(models.Model):
         (2, 'Security OFF'),
         (3, 'No security'),
     )
+
     avtomat_number = models.IntegerField(primary_key=True)
     house = models.CharField(max_length=16, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
@@ -107,6 +108,10 @@ class Avtomat(models.Model):
     search_radius = models.IntegerField(blank=True, null=True, default=300)
     price = models.IntegerField(blank=True, null=True)
     price_for_app = models.IntegerField(blank=True, null=True)
+    visible_in_app = models.BooleanField(
+        blank=True, null=True, default=False,
+        verbose_name='Visible in app',
+    )
     payment_app_url = models.CharField(max_length=64, blank=True, null=True)
     payment_gateway_name = models.CharField(max_length=64, blank=True, null=True, choices=PAYMENT_GATEWAY_NAME)
     payment_gateway_url = models.CharField(

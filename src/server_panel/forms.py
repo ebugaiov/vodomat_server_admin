@@ -6,10 +6,10 @@ from .models import User
 class AvtomatAdminForm(forms.ModelForm):
 
     def clean_rro_id(self):
-        data = self.cleaned_data.get('rro_id')
-        if data and not data.isdigit():
-            raise forms.ValidationError('Invalid Character')
-        return data
+        rro_id = self.cleaned_data.get('rro_id')
+        if rro_id and not rro_id.isdigit():
+            raise forms.ValidationError('Invalid Characters')
+        return rro_id
 
     def clean_security_state(self):
         security_id = self.cleaned_data.get('security_id')
@@ -20,6 +20,12 @@ class AvtomatAdminForm(forms.ModelForm):
             raise forms.ValidationError('Check Security State! SecurityID is empty!')
         return security_state
 
+    def clean_price_for_app(self):
+        price_for_app = self.cleaned_data.get('price_for_app')
+        if price_for_app is None or price_for_app <= 0:
+            self.instance.visible_in_app = False
+        return price_for_app
+
     def clean(self):
         cleaned_data = super().clean()
         house_db = self.instance.house
@@ -27,6 +33,13 @@ class AvtomatAdminForm(forms.ModelForm):
         if house_db and house_db != house_form:
             cleaned_data['longitude'] = None
             cleaned_data['latitude'] = None
+
+        visible_in_app = cleaned_data.get('visible_in_app', self.instance.visible_in_app)
+        price_for_app = cleaned_data.get('price_for_app', self.instance.price_for_app)
+
+        if visible_in_app and (price_for_app is None or price_for_app <= 0):
+            raise forms.ValidationError('Check Price for App! It should be > 0!')
+
         return cleaned_data
 
 

@@ -96,7 +96,7 @@ class AvtomatAdmin(admin.ModelAdmin):
             'fields': ('street', 'house', 'latitude', 'longitude')
         }),
         ('Application', {
-            'fields': ('price_for_app', 'search_radius', 'payment_app_url', 'payment_gateway_name')
+            'fields': ('visible_in_app', 'price_for_app', 'search_radius', 'payment_app_url', 'payment_gateway_name')
         })
     )
 
