@@ -15,9 +15,28 @@ services:
     depends_on:
       - redis
 
+  server_db:
+    image: mysql:8.4
+    container_name: server_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: server_db
+      MYSQL_USER: server_user
+      MYSQL_PASSWORD: server_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - server_db_data_volume:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
   redis:
     image: redis:latest
     restart: always
+    ports:
+      - "6379:6379"
     networks:
       - server_admin_network
 
@@ -39,3 +58,4 @@ networks:
 
 volumes:
   static_volume:
+  server_db_data_volume:
