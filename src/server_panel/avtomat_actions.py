@@ -74,6 +74,15 @@ def set_max_sum(modeladmin, request, queryset):
         if busy_avtomat_number:
             busy_avtomats.append(busy_avtomat_number)
         else:
+            if max_sum_value == 0:
+                item.state = 4
+                item.price_for_app = None
+                item.visible_in_app = False
+            elif max_sum_value > 0 and item.state == 4:
+                item.state = 1
+                item.price_for_app = get_setting_value("avtomat_price_for_app")
+                item.visible_in_app = True
+            item.save()
             log_change(request, item, f'Changed Max Sum to {max_sum_value}')
 
     if busy_avtomats:

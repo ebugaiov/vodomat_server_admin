@@ -88,7 +88,8 @@ class Avtomat(models.Model):
         (0, 'Undefined'),
         (1, 'Normal'),
         (2, 'No Volt'),
-        (3, 'Crashed')
+        (3, 'Crashed'),
+        (4, 'Limit'),
     )
     PAYMENT_GATEWAY_NAME = (
         ('portmone', 'Portmone'),
