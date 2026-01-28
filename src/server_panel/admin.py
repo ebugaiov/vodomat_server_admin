@@ -1,5 +1,9 @@
+import csv
+import io
+
 from django.contrib import admin
 from django.utils.html import format_html
+from django.db.models import Q
 from .models import User, Route, City, Street, Avtomat, Setting
 from .forms import AvtomatAdminForm, UserAdminForm
 from .avtomat_actions import set_max_sum, set_price, set_price_for_app, disable_online_pay
@@ -105,6 +109,43 @@ class AvtomatAdmin(admin.ModelAdmin):
         if obj:
             return fieldsets[1:]
         return fieldsets
+
+    def changelist_view(self, request, extra_context=None):
+        if request.method == 'POST' and 'csv_file' in request.FILES:
+            csv_file = request.FILES['csv_file']
+
+            # Read CSV and extract machine identifiers
+            decoded_file = csv_file.read().decode('utf-8')
+            io_string = io.StringIO(decoded_file)
+            reader = csv.reader(io_string)
+
+            # Skip header if present
+            # next(reader, None)
+
+            # Extract identifiers (adjust based on your CSV format)
+            machine_ids = [row[0] for row in reader if row]
+
+            # Store in session for filtering
+            request.session['machine_filter_ids'] = machine_ids
+
+        # Clear filter if requested
+        if request.GET.get('clear_csv_filter'):
+            request.session.pop('machine_filter_ids', None)
+
+        return super().changelist_view(request, extra_context)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        # Apply CSV filter if exists
+        machine_ids = request.session.get('machine_filter_ids')
+        if machine_ids:
+            # Filter by ID, name, or serial number - adjust as needed
+            qs = qs.filter(
+                Q(avtomat_number__in=machine_ids)
+            )
+
+        return qs
 
 
 @admin.register(Setting)

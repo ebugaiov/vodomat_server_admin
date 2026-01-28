@@ -82,3 +82,11 @@ class UserAdminForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class CSVFilterForm(forms.Form):
+    csv_file = forms.FileField(
+        required=False,
+        label='Select CSV file',
+        help_text='Upload a CSV file with machine IDs'
+    )
