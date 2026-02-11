@@ -56,7 +56,7 @@ class AvtomatAdmin(admin.ModelAdmin):
     list_display = ('number', 'address', 'route', 'state', 'show_on_map', 'create_qr')
     search_fields = ('street__street', 'avtomat_number', 'rro_id')
     autocomplete_fields = ('street', )
-    list_filter = ('state', 'size', 'price_for_app', RoutesListFilter, 'street__city')
+    list_filter = ('state', 'size', 'price_for_app', 'street__city__price_type', RoutesListFilter, 'street__city')
     save_as = True  # Create new Avtomat from existing
     list_per_page = 100
 
